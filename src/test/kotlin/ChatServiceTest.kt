@@ -2,6 +2,7 @@ import org.junit.Before
 import org.junit.Test
 
 import org.junit.Assert.*
+import ru.netology.Chat
 import ru.netology.ChatService
 import ru.netology.Message
 import ru.netology.NotFoundException

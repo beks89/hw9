@@ -9,15 +9,17 @@ object ChatService {
         chats.getOrPut(userId) { Chat(chatId = ++lastChatId) }.messages += message.copy(messageId = ++lastMessageId)
     }
 
-    fun deleteMessage(chatId: Int, messageId: Int) {
+    fun deleteMessage(chatId: Int, messageId: Int): Boolean {
         chats[chatId]
             .let { it?.messages ?: throw NotFoundException("Нет чатов") }
-            .take(messageId)
-            .onEach { it.deleted = true }
+            .find { it.messageId?.equals(messageId) == true }
+            .also { it?.deleted = true }
+        return true
     }
 
-    fun deleteChat(chatId: Int) {
+    fun deleteChat(chatId: Int): Boolean {
         chats.remove(chatId) ?: throw NotFoundException("Нет чатов")
+        return true
     }
 
     fun lastMessages() = chats.values.asSequence()
@@ -43,8 +45,8 @@ object ChatService {
     fun editMessage(chatId: Int, messageId: Int, newText: String): Boolean {
         chats[chatId]
             .let { it?.messages ?: throw NotFoundException("Нет чатов") }
-            .take(messageId)
-            .onEach { it.text = newText }
+            .find { it.messageId?.equals(messageId) == true }
+            .also { it?.text = newText }
         return true
     }
 
